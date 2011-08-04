@@ -336,7 +336,7 @@ draw_arrow (GtkStyle      *style,
       break;
     }
 
-  arrow_info.size = kThemeArrow7pt;
+  arrow_info.size = kThemeArrow9pt;
 
   HIThemeDrawPopupArrow (&rect, &arrow_info, context, kHIThemeOrientationNormal);
 
@@ -1633,6 +1633,7 @@ draw_vline (GtkStyle     *style,
             gint          y2,
             gint          x)
 {
+/*
 	if (GTK_IS_COMBO_BOX (widget) || is_combo_box_child (widget))
 		return;
 
@@ -1649,7 +1650,7 @@ draw_vline (GtkStyle     *style,
 	DrawNativeGreyColorInRect (context, headerBorderGrey, CGRectMake (x, y1, 1, y2 - y1), isActive);
 
 	release_context (window, context);
-
+*/
 	return;	
 }
 
@@ -1746,14 +1747,14 @@ draw_resize_grip (GtkStyle      *style,
 			drawInfo.direction = kThemeGrowUp | kThemeGrowLeft;
 			break;
 	}
-
+*/
     GtkWidget* statusbar;
 	if (IS_DETAIL(detail, "statusbar") && (statusbar = is_in_statusbar(widget))) {
 		GtkAllocation statusRect;
 		gtk_widget_get_allocation (statusbar, &statusRect);
 		quartz_draw_statusbar (style, gtk_widget_get_window (statusbar), state_type, statusbar, detail, x, statusRect.y, width, statusRect.height);
 	}
-*/
+
 	context = get_context (window, area);
 	if (!context)
         return;
@@ -1898,6 +1899,7 @@ draw_layout (GtkStyle     *style,
   parent_class->draw_layout (style, window, state_type, use_text,
                              area, widget, detail,
                              x, y, layout);
+
 }
 
 static void
