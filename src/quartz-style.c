@@ -1558,7 +1558,7 @@ draw_hline (GtkStyle     *style,
       HIThemeMenuItemDrawInfo draw_info;
       CGContextRef context;
       GtkWidget *toplevel;
-      gint width, height;
+      gint width, height = 0;
 
       // FIXME: refactor out and share with draw_box::menuitem
 
