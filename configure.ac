@@ -9,6 +9,7 @@ AC_CONFIG_HEADER(config.h)
 
 AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-define)
 AM_MAINTAINER_MODE
+AM_SILENT_RULES([yes])
 
 AC_PROG_CC
 AM_PROG_CC_STDC
@@ -28,8 +29,10 @@ AC_SUBST(GTK_VERSION)
 AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_OBJCFLAGS)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
   Makefile
   src/Makefile
   theme/Makefile
 ]) 
+
+AC_OUTPUT

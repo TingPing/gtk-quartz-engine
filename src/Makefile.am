@@ -1,4 +1,4 @@
-INCLUDES = $(GTK_CFLAGS) -xobjective-c -Wall
+AM_CPPFLAGS = $(GTK_CFLAGS) -xobjective-c -Wall
 
 enginedir = $(libdir)/gtk-2.0/$(GTK_VERSION)/engines
 engine_LTLIBRARIES = libquartz.la
