@@ -274,7 +274,8 @@ quartz_draw_menu_item (GtkStyle       *style,
 
       draw_info.version = 0;
 
-      if (gtk_menu_item_get_submenu (GTK_MENU_ITEM(widget)))
+      if (gtk_menu_item_get_submenu (GTK_MENU_ITEM(widget))
+        && !GTK_IS_MENU_BAR(gtk_widget_get_parent(widget)))
         draw_info.itemType = kThemeMenuItemHierarchical;
       else
         draw_info.itemType = kThemeMenuItemPlain;
