@@ -134,10 +134,8 @@ quartz_draw_button (GtkStyle        *style,
 {
   CGContextRef context;
   HIRect rect;
-  HIShapeRef shape;
   HIThemeButtonDrawInfo draw_info;
   gint line_width;
-  SInt32 theme_height;
 
   draw_info.version = 0;
   draw_info.kind = kind;

@@ -69,6 +69,7 @@ style_setup_settings (void)
   debug = g_strdup (g_getenv ("DEBUG_DRAW"));
 }
 
+#if 0
 static void
 style_setup_system_font (GtkStyle *style)
 {
@@ -86,7 +87,6 @@ style_setup_system_font (GtkStyle *style)
   style->font_desc = pango_font_description_from_string (font);
 }
 
-#if 0
 static gchar *
 style_get_system_font_string (NSControlSize size)
 {
@@ -243,49 +243,6 @@ is_in_statusbar (GtkWidget *widget)
     }
 
 	return NULL;
-}
-static gboolean
-is_path_bar_button (GtkWidget *widget)
-{
-  GtkWidget *tmp;
-
-  if (!GTK_IS_BUTTON (widget))
-    return FALSE;
-
-  for (tmp = widget->parent; tmp; tmp = tmp->parent)
-    {
-      if (strcmp (G_OBJECT_TYPE_NAME (tmp), "GtkPathBar") == 0)
-        return TRUE;
-    }
-
-  return FALSE;
-}
-
-/* Checks if the button is displaying just an icon and no text, used to
- * decide whether to show a square or aqua button.
- */
-static gboolean
-is_icon_only_button (GtkWidget *widget)
-{
-  GtkWidget *child;
-
-  if (!GTK_IS_BUTTON (widget))
-    return FALSE;
-
-  child = gtk_bin_get_child (GTK_BIN (widget));
-
-  /* Very simplistic checks, could be made a bit smarter. */
-  if (GTK_IS_IMAGE (child))
-    return TRUE;
-
-  if (GTK_IS_ALIGNMENT (child))
-    {
-      child = gtk_bin_get_child (GTK_BIN (child));
-      if (GTK_IS_IMAGE (child))
-        return TRUE;
-    }
-
-  return FALSE;
 }
 
 static void
