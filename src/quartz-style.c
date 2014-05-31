@@ -1155,11 +1155,12 @@ draw_extension (GtkStyle        *style,
 
       release_context (window, context);
     }
-
-  parent_class->draw_extension (style, window, state_type,
+  else
+  {
+    parent_class->draw_extension (style, window, state_type,
                                 shadow_type, area, widget, detail,
                                 x, y, width, height, gap_side);
-
+  }
 }
 
 static void
@@ -1180,11 +1181,11 @@ draw_box_gap (GtkStyle        *style,
 {
   DEBUG_DRAW;
 
-  
+#if 0
   parent_class->draw_box_gap (style, window, state_type, shadow_type,
                               area, widget, detail, x, y, width, height,
                               gap_side, gap_x, gap_width);
-
+#endif
 }
 
 static void
@@ -1335,7 +1336,7 @@ draw_shadow (GtkStyle      *style,
 		return;
     }
   else if ((GTK_IS_SCROLLED_WINDOW (widget) && IS_DETAIL (detail, "scrolled_window")) ||
-     /* (GTK_IS_FRAME (widget) && IS_DETAIL (detail, "frame")) || */
+      (GTK_IS_FRAME (widget) && IS_DETAIL (detail, "frame")) ||
       (GTK_IS_ENTRY (widget) && IS_DETAIL (detail, "entry")))
     {
       GtkShadowType shadow_type = GTK_SHADOW_NONE;
@@ -1411,6 +1412,7 @@ draw_shadow_gap (GtkStyle        *style,
 {
   DEBUG_DRAW;
 
+#if 0
   sanitize_size (window, &width, &height);
 
   g_print ("Missing implementation of draw_shadow_gap for %s\n", detail);
@@ -1418,7 +1420,7 @@ draw_shadow_gap (GtkStyle        *style,
   parent_class->draw_shadow_gap (style, window, state_type, shadow_type, area,
                                  widget, detail, x, y, width, height,
                                  gap_side, gap_x, gap_width);
-
+#endif
  }
 
 static void
