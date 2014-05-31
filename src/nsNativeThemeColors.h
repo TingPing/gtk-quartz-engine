@@ -40,17 +40,25 @@
 
 #import <Cocoa/Cocoa.h>
 
-// edited: 7/9/11 Alex Corrado
-// snippet from: http://stackoverflow.com/questions/2115373/os-version-checking-in-cocoa
-#import <CoreServices/CoreServices.h>
-
 static BOOL OnVersionOrLater (SInt32 checkMajor, SInt32 checkMinor)
 {
-	SInt32 major = 0;
-	SInt32 minor = 0;
-	Gestalt (gestaltSystemVersionMajor, &major);
-	Gestalt (gestaltSystemVersionMinor, &minor);
-	return ((major == checkMajor && minor >= checkMinor) || major > checkMajor);
+  static SInt32 major = 0;
+  static SInt32 minor = 0;
+
+  if (!major)
+  {
+    NSDictionary *version = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+    NSString *productVersion = [version objectForKey:@"ProductVersion"];
+    NSScanner *scanner = [NSScanner scannerWithString:productVersion];
+
+    [scanner scanInt:&major];
+    [scanner scanString:@"." intoString:NULL];
+    [scanner scanInt:&minor];
+
+    [productVersion release];
+  }
+
+  return ((major == checkMajor && minor >= checkMinor) || major > checkMajor);
 }
 
 typedef enum {
