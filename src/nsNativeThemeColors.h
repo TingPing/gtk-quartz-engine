@@ -38,29 +38,6 @@
 #ifndef nsNativeThemeColors_h_
 #define nsNativeThemeColors_h_
 
-#import <Cocoa/Cocoa.h>
-
-static BOOL OnVersionOrLater (SInt32 checkMajor, SInt32 checkMinor)
-{
-  static SInt32 major = 0;
-  static SInt32 minor = 0;
-
-  if (!major)
-  {
-    NSDictionary *version = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
-    NSString *productVersion = [version objectForKey:@"ProductVersion"];
-    NSScanner *scanner = [NSScanner scannerWithString:productVersion];
-
-    [scanner scanInt:&major];
-    [scanner scanString:@"." intoString:NULL];
-    [scanner scanInt:&minor];
-
-    [productVersion release];
-  }
-
-  return ((major == checkMajor && minor >= checkMinor) || major > checkMajor);
-}
-
 typedef enum {
   headerStartGrey,
   headerEndGrey,
@@ -72,71 +49,10 @@ typedef enum {
   statusbarGradientEndGrey
 } ColorName;
 
-static const int sLeopardThemeColors[][2] = {
-  /* { active window, inactive window } */
-  // titlebar and toolbar:
-  { 0xC5, 0xE9 }, // start grey
-  { 0x96, 0xCA }, // end grey
-  { 0x42, 0x89 }, // bottom separator line
-  { 0xC0, 0xE2 }, // top separator line
-  // statusbar:
-  { 0x42, 0x86 }, // first top border
-  { 0xD8, 0xEE }, // second top border
-  { 0xBD, 0xE4 }, // gradient start
-  { 0x96, 0xCF }  // gradient end
-};
-
-static const int sSnowLeopardThemeColors[][2] = {
-  /* { active window, inactive window } */
-  // titlebar and toolbar:
-  { 0xD1, 0xEE }, // start grey
-  { 0xA7, 0xD8 }, // end grey
-  { 0x51, 0x99 }, // bottom separator line
-  { 0xD0, 0xF1 }, // top separator line
-  // statusbar:
-  { 0x51, 0x99 }, // first top border
-  { 0xE8, 0xF6 }, // second top border
-  { 0xCB, 0xEA }, // gradient start
-  { 0xA7, 0xDE }  // gradient end
-};
-
-static const int sLionThemeColors[][2] = {
-    /* { active window, inactive window } */
-    // titlebar and toolbar:
-    { 0xE9, 0xF8 }, // start grey
-    { 0xB8, 0xE3 }, // end grey
-    { 0x6A, 0xA9 }, // bottom separator line
-    { 0xD0, 0xF1 }, // top separator line
-    // statusbar:
-    { 0x7A, 0x99 }, // first top border
-    { 0xCF, 0xE7 }, // second top border
-    { 0xC9, 0xE4 }, // gradient start
-    { 0xA7, 0xD8 }  // gradient end
-};
-
-static int NativeGreyColorAsInt(ColorName name, BOOL isMain)
-{
-  if (OnVersionOrLater (10, 7))
-    return sLionThemeColors[name][isMain ? 0 : 1];
-
-  if (OnVersionOrLater (10, 6))
-    return sSnowLeopardThemeColors[name][isMain ? 0 : 1];
-
-  return sLeopardThemeColors[name][isMain ? 0 : 1];
-}
-
-static float NativeGreyColorAsFloat(ColorName name, BOOL isMain)
-{
-  return NativeGreyColorAsInt(name, isMain) / 255.0f;
-}
-
-
-static void DrawNativeGreyColorInRect(CGContextRef context, ColorName name,
-                                      CGRect rect, BOOL isMain)
-{
-  float grey = NativeGreyColorAsFloat(name, isMain);
-  CGContextSetRGBFillColor(context, grey, grey, grey, 1.0f);
-  CGContextFillRect(context, rect);
-}
+int NativeGreyColorAsInt(ColorName name, BOOL isMain);
+float NativeGreyColorAsFloat(ColorName name, BOOL isMain);
+void DrawNativeGreyColorInRect(CGContextRef context, ColorName name,
+                                      CGRect rect, BOOL isMain);
+BOOL OnVersionOrLater (SInt32 checkMajor, SInt32 checkMinor);
 
 #endif // nsNativeThemeColors_h_

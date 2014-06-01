@@ -1,0 +1,127 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is mozilla.org code.
+ *
+ * The Initial Developer of the Original Code is
+ * Markus Stange.
+ * Portions created by the Initial Developer are Copyright (C) 2008
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+#import <Cocoa/Cocoa.h>
+#include "nsNativeThemeColors.h"
+
+static const int sLeopardThemeColors[][2] = {
+  /* { active window, inactive window } */
+  // titlebar and toolbar:
+  { 0xC5, 0xE9 }, // start grey
+  { 0x96, 0xCA }, // end grey
+  { 0x42, 0x89 }, // bottom separator line
+  { 0xC0, 0xE2 }, // top separator line
+  // statusbar:
+  { 0x42, 0x86 }, // first top border
+  { 0xD8, 0xEE }, // second top border
+  { 0xBD, 0xE4 }, // gradient start
+  { 0x96, 0xCF }  // gradient end
+};
+
+static const int sSnowLeopardThemeColors[][2] = {
+  /* { active window, inactive window } */
+  // titlebar and toolbar:
+  { 0xD1, 0xEE }, // start grey
+  { 0xA7, 0xD8 }, // end grey
+  { 0x51, 0x99 }, // bottom separator line
+  { 0xD0, 0xF1 }, // top separator line
+  // statusbar:
+  { 0x51, 0x99 }, // first top border
+  { 0xE8, 0xF6 }, // second top border
+  { 0xCB, 0xEA }, // gradient start
+  { 0xA7, 0xDE }  // gradient end
+};
+
+static const int sLionThemeColors[][2] = {
+    /* { active window, inactive window } */
+    // titlebar and toolbar:
+    { 0xE9, 0xF8 }, // start grey
+    { 0xB8, 0xE3 }, // end grey
+    { 0x6A, 0xA9 }, // bottom separator line
+    { 0xD0, 0xF1 }, // top separator line
+    // statusbar:
+    { 0x7A, 0x99 }, // first top border
+    { 0xCF, 0xE7 }, // second top border
+    { 0xC9, 0xE4 }, // gradient start
+    { 0xA7, 0xD8 }  // gradient end
+};
+
+BOOL OnVersionOrLater (SInt32 checkMajor, SInt32 checkMinor)
+{
+  static SInt32 major = 0;
+  static SInt32 minor = 0;
+
+  if (!major)
+  {
+    NSDictionary *version = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+    NSString *productVersion = [version objectForKey:@"ProductVersion"];
+    NSScanner *scanner = [NSScanner scannerWithString:productVersion];
+
+    [scanner scanInt:&major];
+    [scanner scanString:@"." intoString:NULL];
+    [scanner scanInt:&minor];
+
+    [productVersion release];
+  }
+
+  return ((major == checkMajor && minor >= checkMinor) || major > checkMajor);
+}
+
+int NativeGreyColorAsInt(ColorName name, BOOL isMain)
+{
+  if (OnVersionOrLater (10, 7))
+    return sLionThemeColors[name][isMain ? 0 : 1];
+
+  if (OnVersionOrLater (10, 6))
+    return sSnowLeopardThemeColors[name][isMain ? 0 : 1];
+
+  return sLeopardThemeColors[name][isMain ? 0 : 1];
+}
+
+float NativeGreyColorAsFloat(ColorName name, BOOL isMain)
+{
+  return NativeGreyColorAsInt(name, isMain) / 255.0f;
+}
+
+
+void DrawNativeGreyColorInRect(CGContextRef context, ColorName name,
+                                      CGRect rect, BOOL isMain)
+{
+  float grey = NativeGreyColorAsFloat(name, isMain);
+  CGContextSetRGBFillColor(context, grey, grey, grey, 1.0f);
+  CGContextFillRect(context, rect);
+}
