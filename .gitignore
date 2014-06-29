@@ -16,3 +16,5 @@ ltmain.sh
 missing
 setup.sh
 stamp-h1
+compile
+*.m4
