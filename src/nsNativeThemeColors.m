@@ -94,8 +94,6 @@ BOOL OnVersionOrLater (SInt32 checkMajor, SInt32 checkMinor)
     [scanner scanInt:&major];
     [scanner scanString:@"." intoString:NULL];
     [scanner scanInt:&minor];
-
-    [productVersion release];
   }
 
   return ((major == checkMajor && minor >= checkMinor) || major > checkMajor);
